@@ -45,7 +45,7 @@ public class SecurityConfig {
                     res.setContentType("application/json");
                     res.setCharacterEncoding("UTF-8");
                     String json = String.format(
-                        "{\"status\": 401, \"error\": \"Unauthorized\", \"mensaje\": \"Acceso denegado. Se requiere un token Bearer en el header Authorization.\", \"ruta\": \"%s\"}",
+                        "{\"status\": 401, \"error\": \"Acceso denegado. Se requiere un token Bearer en el header Authorization.\", \"mensaje\": \"Acceso denegado. Se requiere un token Bearer en el header Authorization.\", \"ruta\": \"%s\"}",
                         req.getRequestURI()
                     );
                     res.getWriter().print(json);
@@ -55,7 +55,7 @@ public class SecurityConfig {
                     res.setContentType("application/json");
                     res.setCharacterEncoding("UTF-8");
                     String json = String.format(
-                        "{\"status\": 403, \"error\": \"Forbidden\", \"mensaje\": \"No tienes permisos suficientes para acceder a este recurso.\", \"ruta\": \"%s\"}",
+                        "{\"status\": 403, \"error\": \"No tienes permisos suficientes para acceder a este recurso.\", \"mensaje\": \"No tienes permisos suficientes para acceder a este recurso.\", \"ruta\": \"%s\"}",
                         req.getRequestURI()
                     );
                     res.getWriter().print(json);

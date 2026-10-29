@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
             jakarta.servlet.http.HttpServletRequest request) {
         Map<String, Object> errorPayload = new java.util.LinkedHashMap<>();
         errorPayload.put("status", status.value());
-        errorPayload.put("error", status.getReasonPhrase());
+        errorPayload.put("error", message);
         errorPayload.put("mensaje", message);
         errorPayload.put("ruta", request.getRequestURI());
 
