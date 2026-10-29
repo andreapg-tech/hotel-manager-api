@@ -9,7 +9,7 @@ API REST para la gestión de un hotel: usuarios, habitaciones y reservas. Desarr
 - 👤 **Registro e inicio de sesión** de usuarios con contraseñas cifradas con **BCrypt**.
 - 🔐 **Autenticación sin estado con JWT**, validada en cada petición mediante un filtro propio.
 - 🛡️ **Control de acceso por roles** (`CLIENTE` y `ADMIN`) con Spring Security.
-- 🚦 **Rate limiting en el login**: máximo 5 intentos por minuto para frenar ataques de fuerza bruta.
+- 🚦 **Rate limiting en todos los inicios de sesión** (clientes y portal de empleados): máximo 5 intentos por minuto por IP para frenar ataques de fuerza bruta.
 - 🛏️ **Búsqueda de habitaciones disponibles** por fechas, tipo y precio máximo.
 - 📅 **Gestión de reservas**: crear, consultar y cancelar las reservas propias.
 - 📊 **Panel de administración**: estadísticas, gestión de reservas y habitaciones, y exportación de reportes en CSV.

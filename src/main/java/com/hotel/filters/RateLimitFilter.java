@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -19,11 +20,15 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private static final long VENTANA_TIEMPO_MS = 60000;
     private static final int MAX_PETICIONES = 5;
 
+    // Todas las rutas de inicio de sesión: si alguna quedara fuera, un atacante
+    // podría usarla para probar contraseñas sin límite.
+    private static final Set<String> RUTAS_LOGIN = Set.of("/api/login", "/portal/empleado");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (!"/api/login".equals(request.getServletPath())) {
+        if (!esIntentoDeLogin(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,5 +56,10 @@ public class RateLimitFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean esIntentoDeLogin(HttpServletRequest request) {
+        return "POST".equalsIgnoreCase(request.getMethod())
+                && RUTAS_LOGIN.contains(request.getServletPath());
     }
 }
