@@ -7,6 +7,7 @@ API REST para la gestión de un hotel: usuarios, habitaciones y reservas. Desarr
 ## ✨ Funcionalidades
 
 - 👤 **Registro e inicio de sesión** de usuarios con contraseñas cifradas con **BCrypt**.
+- 🕵️ **Protección contra la enumeración de usuarios**: el login responde igual, y en el mismo tiempo, tanto si el email existe como si no.
 - 🔐 **Autenticación sin estado con JWT**, validada en cada petición mediante un filtro propio.
 - 🛡️ **Control de acceso por roles** (`CLIENTE` y `ADMIN`) con Spring Security.
 - 🚦 **Rate limiting en todos los inicios de sesión** (clientes y portal de empleados): máximo 5 intentos por minuto por IP para frenar ataques de fuerza bruta.
@@ -127,6 +128,7 @@ Las pruebas de integración comprueban, entre otros casos:
 - Inicio de sesión correcto y generación del token.
 - Rechazo de peticiones sin token o con un token inválido.
 - Acceso denegado cuando un `CLIENTE` intenta usar rutas de `ADMIN`.
+- Mismo error para un email inexistente y para una contraseña incorrecta, para no revelar qué cuentas existen.
 - Respuestas correctas ante rutas inexistentes y métodos no soportados.
 
 ## 👤 Autora

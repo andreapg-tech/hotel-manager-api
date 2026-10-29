@@ -166,4 +166,30 @@ public class ApiIntegrationTests {
                 .andExpect(jsonPath("$.error").value(
                         "Faltan datos obligatorios para el registro: nombre, email o password no pueden estar en blanco."));
     }
+
+    @Test
+    @DisplayName("9. Enumeración de Usuarios: Email inexistente y contraseña errónea dan la misma respuesta")
+    public void testLoginNoRevelaSiElEmailExiste() throws Exception {
+        Usuario mockUser = new Usuario();
+        mockUser.setEmail("existe@hotel.com");
+        mockUser.setPassword(passwordEncoder.encode("password123"));
+        mockUser.setRol("CLIENTE");
+
+        when(usuarioRepository.findByEmailIgnoreCase("existe@hotel.com")).thenReturn(Optional.of(mockUser));
+        when(usuarioRepository.findByEmailIgnoreCase("noexiste@hotel.com")).thenReturn(Optional.empty());
+
+        // Email registrado con contraseña incorrecta
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\": \"existe@hotel.com\", \"password\": \"incorrecta1\"}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("Credenciales inválidas."));
+
+        // Email no registrado: la respuesta debe ser idéntica
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\": \"noexiste@hotel.com\", \"password\": \"incorrecta1\"}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("Credenciales inválidas."));
+    }
 }

@@ -1,12 +1,11 @@
 package com.hotel.controllers;
 
 import com.hotel.models.Usuario;
-import com.hotel.repositories.UsuarioRepository;
+import com.hotel.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,12 +15,10 @@ import java.util.Map;
 @RequestMapping("/portal/empleado")
 public class PortalController {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
-    public PortalController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
+    public PortalController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping
@@ -49,19 +46,12 @@ public class PortalController {
             return ResponseEntity.badRequest().body(error);
         }
 
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email.trim()).orElse(null);
-
-        // Control de acceso por rol
+        // Mismo mensaje si el email no existe, si la contraseña es incorrecta o si el usuario
+        // no es administrador: así no se puede averiguar qué cuentas existen ni cuáles son de empleados.
+        Usuario usuario = authService.buscarConCredenciales(email, password);
         if (usuario == null || !"ADMIN".equals(usuario.getRol())) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Acceso Denegado. Este portal es exclusivo para empleados con rol administrativo.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-        }
-
-        // Verificación de password
-        if (!passwordEncoder.matches(password, usuario.getPassword())) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Acceso Denegado. Las credenciales proporcionadas son incorrectas.");
+            error.put("error", "Acceso denegado. " + AuthService.MENSAJE_CREDENCIALES_INVALIDAS);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
 
