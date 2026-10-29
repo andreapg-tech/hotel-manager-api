@@ -9,10 +9,12 @@ API REST para la gestión de un hotel: usuarios, habitaciones y reservas. Desarr
 - 👤 **Registro e inicio de sesión** de usuarios con contraseñas cifradas con **BCrypt**.
 - 🕵️ **Protección contra la enumeración de usuarios**: el login responde igual, y en el mismo tiempo, tanto si el email existe como si no.
 - 🔐 **Autenticación sin estado con JWT**, validada en cada petición mediante un filtro propio.
+- 🍪 **Portal de empleados con sesión** protegido contra *session fixation* (el ID de sesión se regenera al iniciar sesión y nunca se expone en las respuestas).
 - 🛡️ **Control de acceso por roles** (`CLIENTE` y `ADMIN`) con Spring Security.
 - 🚦 **Rate limiting en todos los inicios de sesión** (clientes y portal de empleados): máximo 5 intentos por minuto por IP para frenar ataques de fuerza bruta.
 - 🛏️ **Búsqueda de habitaciones disponibles** por fechas, tipo y precio máximo.
 - 📅 **Gestión de reservas**: crear, consultar y cancelar las reservas propias.
+- 🌐 **CORS restringido** a una lista de orígenes de confianza configurable.
 - 📊 **Panel de administración**: estadísticas, gestión de reservas y habitaciones, y exportación de reportes en CSV.
 - ⚠️ **Gestión centralizada de errores** con respuestas JSON coherentes.
 - ✅ **Pruebas de integración** de autenticación, tokens y permisos.
@@ -60,6 +62,7 @@ URL base: `http://localhost:8080/hotel-manager`
 | `GET` `POST` `DELETE` | `/api/admin/reservas` | `ADMIN` | Gestión de todas las reservas |
 | `PUT` | `/api/admin/habitaciones` | `ADMIN` | Modificar habitaciones |
 | `GET` | `/api/admin/reportes/reservas` | `ADMIN` | Exportar reservas en CSV |
+| `POST` `GET` `DELETE` | `/portal/empleado` | Empleados `ADMIN` (sesión) | Login, comprobación y cierre de la sesión del portal de empleados |
 
 Las rutas protegidas requieren la cabecera:
 

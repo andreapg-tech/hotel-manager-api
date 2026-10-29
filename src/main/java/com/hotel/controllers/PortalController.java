@@ -56,6 +56,12 @@ public class PortalController {
         }
 
         // Login exitoso: Sesión Stateful
+        // Protección contra session fixation: se descarta cualquier sesión previa y se crea
+        // una nueva tras autenticarse, así un ID de sesión impuesto por un atacante no sirve.
+        HttpSession sesionAnterior = request.getSession(false);
+        if (sesionAnterior != null) {
+            sesionAnterior.invalidate();
+        }
         HttpSession session = request.getSession(true);
         session.setAttribute("empleado_logueado", usuario.getEmail());
         session.setAttribute("empleado_nombre", usuario.getNombre());
@@ -64,7 +70,6 @@ public class PortalController {
         Map<String, Object> success = new HashMap<>();
         success.put("mensaje", "Login administrativo exitoso");
         success.put("empleado", usuario.getNombre());
-        success.put("session_id", session.getId());
         return ResponseEntity.ok(success);
     }
 
@@ -82,7 +87,6 @@ public class PortalController {
         info.put("estado", "Sesión activa");
         info.put("empleado", session.getAttribute("empleado_nombre"));
         info.put("email", session.getAttribute("empleado_logueado"));
-        info.put("session_id", session.getId());
         return ResponseEntity.ok(info);
     }
 
