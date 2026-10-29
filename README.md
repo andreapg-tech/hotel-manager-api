@@ -102,6 +102,7 @@ cp .env.example .env
 | `DB_URL` | URL de conexión a MySQL | `jdbc:mysql://localhost:3306/hotelweb?serverTimezone=UTC` |
 | `DB_USERNAME` | Usuario de MySQL | `root` |
 | `DB_PASSWORD` | Contraseña de MySQL | *(vacía)* |
+| `CORS_ALLOWED_ORIGINS` | Orígenes del frontend autorizados, separados por comas | `http://localhost:5500,http://127.0.0.1:5500` |
 
 El archivo `.env` está en el `.gitignore`, así que nunca se sube al repositorio.
 

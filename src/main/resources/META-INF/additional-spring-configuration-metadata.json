@@ -9,6 +9,11 @@
       "name": "jwt.expiration",
       "type": "java.lang.Long",
       "description": "Tiempo de expiración del token en milisegundos."
+    },
+    {
+      "name": "app.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Orígenes autorizados por CORS, separados por comas."
     }
   ]
 }

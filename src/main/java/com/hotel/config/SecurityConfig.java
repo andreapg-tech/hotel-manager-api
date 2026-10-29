@@ -2,6 +2,7 @@ package com.hotel.config;
 
 import com.hotel.filters.JwtAuthenticationFilter;
 import com.hotel.filters.RateLimitFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,10 +20,17 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final RateLimitFilter rateLimitFilter;
+    private final java.util.List<String> origenesPermitidos;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, RateLimitFilter rateLimitFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, RateLimitFilter rateLimitFilter,
+                          @Value("${app.cors.allowed-origins}") String origenesPermitidos) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.rateLimitFilter = rateLimitFilter;
+        // Lista explícita de orígenes de confianza (separados por comas), nunca un comodín
+        this.origenesPermitidos = java.util.Arrays.stream(origenesPermitidos.split(","))
+                .map(String::trim)
+                .filter(origen -> !origen.isEmpty())
+                .toList();
     }
 
     @Bean
@@ -84,7 +92,9 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
-        config.setAllowedOriginPatterns(java.util.List.of("*"));
+        // Solo los orígenes configurados pueden hacer peticiones con credenciales.
+        // Un comodín ("*") junto con allowCredentials permitiría a cualquier web actuar en nombre del usuario.
+        config.setAllowedOrigins(origenesPermitidos);
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(java.util.List.of("*"));
         config.setAllowCredentials(true);
