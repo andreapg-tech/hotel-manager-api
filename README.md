@@ -1,5 +1,9 @@
 # Hotel Manager API 🏨
 
+<p align="left">
+  <b>Español</b> | <a href="README.en.md">Read in English 🇬🇧</a>
+</p>
+
 API REST para la gestión de un hotel: usuarios, habitaciones y reservas. Desarrollada con **Java 21** y **Spring Boot**, con especial atención a la **seguridad**: autenticación con JWT, control de acceso por roles y protección del login frente a ataques de fuerza bruta.
 
 > 🚧 El frontend (HTML, CSS, JavaScript y Bootstrap) está en desarrollo y se publicará más adelante.
@@ -136,4 +140,4 @@ Las pruebas de integración comprueban, entre otros casos:
 
 ## 👤 Autora
 
-**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez) · [GitHub](https://github.com/andreapg-tech)
+**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez)
